@@ -21,7 +21,11 @@ public:
 
 	int getId() const;
 
+	void setId(int id);
+
 	Status getStatus() const;
+
+	void setStatus(Status status);
 
 };
 

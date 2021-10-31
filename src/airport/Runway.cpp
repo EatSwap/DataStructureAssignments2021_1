@@ -29,6 +29,10 @@ void Runway::setLandingRate(double landingRate) {
 	LANDING_RATE = landingRate;
 }
 
+Runway::Status Runway::getStatus() const {
+	return this->status;
+}
+
 Runway::Runway(int maxQueueSize, double departingRate, double landingRate, bool isVerbose = false) : MAX_QUEUE_SIZE(maxQueueSize), DEPARTING_RATE(departingRate), LANDING_RATE(landingRate), IS_VERBOSE(isVerbose) {}
 
 void Runway::generatePlane() {
@@ -74,6 +78,15 @@ bool Runway::insertPlane(const Plane& plane) {
 			std::cerr << "[WARN] Invalid branch reached. (1)" << std::endl;
 	}
 	return true;
+}
+
+void Runway::reset() {
+	this->MAX_QUEUE_SIZE = 10.0;
+	this->DEPARTING_RATE = this->LANDING_RATE = 0.3;
+	this->status = IDLE;
+	this->landingQueue = std::queue<Plane>();
+	this->takeoffQueue = std::queue<Plane>();
+	clock = landingCount = takeoffCount = landingRejected = takeoffRejected = landingWaitTime = takeoffWaitTime = 0;
 }
 
 void Runway::printLog(const std::string& msg) const {
