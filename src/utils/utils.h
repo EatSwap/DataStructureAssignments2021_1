@@ -4,7 +4,10 @@
 namespace utils {
 
 unsigned randomInt();
-unsigned randomInt(unsigned);
+
+inline unsigned randomInt(unsigned);
+
+inline bool randomChance(double n);
 
 }
 
