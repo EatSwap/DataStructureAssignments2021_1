@@ -12,5 +12,6 @@ Prerequisites:
 mkdir "bin"
 cd "bin"
 cmake ..
+make
 ./DataStructureAssignments2021_1
 ```
