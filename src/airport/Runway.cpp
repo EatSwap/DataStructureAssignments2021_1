@@ -39,7 +39,8 @@ Runway::Runway(int maxQueueSize, double departingRate, double landingRate, bool 
 
 void Runway::generatePlane() {
 	// Generate departing plane
-	if (utils::randomChance(this->DEPARTING_RATE)) {
+	int newDeparting = utils::randomChance(this->DEPARTING_RATE);
+	for (int i = 0; i < newDeparting; ++i) {
 		Plane t(Plane::DEPARTING);
 		if (insertPlane(t)) {
 			printLog(t, SUCCESS);
@@ -47,11 +48,13 @@ void Runway::generatePlane() {
 			++takeoffRejected;
 			printLog(t, REJECTED);
 		}
-	} else {
+	}
+	if (!newDeparting) {
 		printLog("No departing plane generated at this time.");
 	}
 	// Generate landing plane
-	if (utils::randomChance(this->LANDING_RATE)) {
+	int newLanding = utils::randomChance(this->LANDING_RATE);
+	for (int i = 0; i < newLanding; ++i) {
 		Plane t(Plane::LANDING);
 		if (insertPlane(t)) {
 			printLog(t, SUCCESS);
@@ -59,7 +62,8 @@ void Runway::generatePlane() {
 			++landingRejected;
 			printLog(t, REJECTED);
 		}
-	} else {
+	}
+	if (!newLanding) {
 		printLog("No landing plane generated at this time.");
 	}
 }
@@ -95,12 +99,12 @@ void Runway::reset() {
 
 void Runway::printLog(const std::string& msg) const {
 	if (IS_VERBOSE)
-		printf("[%d] %s\n", this->clock, msg.c_str());
+		printf("[%zu] %s\n", this->clock, msg.c_str());
 }
 
 void Runway::printLog(const Plane& plane, const Result result) const {
 	if (IS_VERBOSE)
-		printf("[%d] Generated Plane # %d trying to %s %s.\n",
+		printf("[%zu] Generated Plane # %d trying to %s %s.\n",
 			   clock,
 			   plane.getId(),
 			   plane.getStatus() == Plane::Status::LANDING ? "land" : (plane.getStatus() == Plane::Status::DEPARTING ? "takeoff" : "[INVALID]"),
@@ -110,7 +114,7 @@ void Runway::printLog(const Plane& plane, const Result result) const {
 
 void Runway::printLog(const Plane& plane, Status status) const {
 	if (IS_VERBOSE)
-		printf("[%d] Plane # %d used the runway to %s.\n",
+		printf("[%zu] Plane # %d used the runway to %s.\n",
 			   clock,
 			   plane.getId(),
 			   status == LAND ? "land" : (status == TAKEOFF ? "takeoff" : "[INVALID]")
@@ -138,7 +142,7 @@ void Runway::runSimulation(const int duration) {
 }
 
 bool Runway::landPlane() {
-	if (takeoffQueue.empty())
+	if (landingQueue.empty())
 		return false;
 	this->status = LAND;
 	Plane t = landingQueue.front();
@@ -175,8 +179,7 @@ void Runway::shutdown() {
 }
 
 std::string Runway::getSummary() const {
-	std::string ret;
-	std::stringstream ss(ret);
+	std::ostringstream ss;
 	ss << "Summary:" << std::endl;
 	ss << "Time simulated: " << clock << std::endl;
 	ss << "Accepted planes (land/takeoff): " << landingCount << "/" << takeoffCount << std::endl;
@@ -184,7 +187,7 @@ std::string Runway::getSummary() const {
 	ss << "Average landing waiting time: " << (double (landingWaitTime) / double (landingCount)) << std::endl;
 	ss << "Average takeoff waiting time: " << (double (takeoffWaitTime) / double (takeoffCount)) << std::endl;
 	// ss <<
-	return ret;
+	return ss.str();
 }
 
 }
