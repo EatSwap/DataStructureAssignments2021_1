@@ -7,10 +7,6 @@
 
 namespace utils {
 
-unsigned randomInt();
-
-unsigned randomInt(unsigned);
-
 int randomChance(double n);
 
 }

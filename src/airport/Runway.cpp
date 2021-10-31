@@ -122,8 +122,9 @@ void Runway::printLog(const Plane& plane, Status status) const {
 }
 
 void Runway::runSimulation(const int duration) {
+	this->TIME_TO_SIMULATE = duration;
 	reset();
-	for (clock = 0; clock < duration; ++clock) {
+	for (clock = 0; clock < TIME_TO_SIMULATE; ++clock) {
 		generatePlane();
 		// Try to inspect queues;
 		if (!landingQueue.empty()) {
@@ -138,7 +139,7 @@ void Runway::runSimulation(const int duration) {
 		landingWaitTime += landingQueue.size();
 		takeoffWaitTime += takeoffQueue.size();
 	}
-	shutdown();
+	// shutdown();
 }
 
 bool Runway::landPlane() {
@@ -181,9 +182,13 @@ void Runway::shutdown() {
 std::string Runway::getSummary() const {
 	std::ostringstream ss;
 	ss << "Summary:" << std::endl;
-	ss << "Time simulated: " << clock << std::endl;
+	ss << "Time simulated (actual/desired): " << clock << "/" << TIME_TO_SIMULATE << std::endl;
 	ss << "Accepted planes (land/takeoff): " << landingCount << "/" << takeoffCount << std::endl;
 	ss << "Rejected planes (land/takeoff): " << landingRejected << "/" << takeoffRejected << std::endl;
+	ss << "Remaining planes (land/takeoff): " << landingQueue.size() << "/" << takeoffQueue.size() << std::endl;
+	ss << "Idle time: " << idleTime << std::endl;
+	ss << "Landing planes generating rate (actual/desired): " << double (landingRejected + landingCount) / TIME_TO_SIMULATE << "/" << LANDING_RATE << std::endl;
+	ss << "Takeoff planes generating rate (actual/desired): " << double (takeoffRejected + takeoffCount) / TIME_TO_SIMULATE << "/" << DEPARTING_RATE << std::endl;
 	ss << "Average landing waiting time: " << (double (landingWaitTime) / double (landingCount)) << std::endl;
 	ss << "Average takeoff waiting time: " << (double (takeoffWaitTime) / double (takeoffCount)) << std::endl;
 	// ss <<

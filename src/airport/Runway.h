@@ -20,6 +20,7 @@ private:
 	int MAX_QUEUE_SIZE = 10.0;
 	double DEPARTING_RATE = 0.3, LANDING_RATE = 0.3;
 	Status status = IDLE;
+	int TIME_TO_SIMULATE = -1;
 
 	std::queue<Plane> landingQueue, takeoffQueue;
 
