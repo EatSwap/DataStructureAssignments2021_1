@@ -24,10 +24,12 @@ private:
 	std::queue<Plane> landingQueue, takeoffQueue;
 
 	// Counters
-	int clock = 0;
-	int landingCount = 0, takeoffCount = 0;
-	int landingRejected = 0, takeoffRejected = 0;
-	int landingWaitTime = 0, takeoffWaitTime = 0;
+	// size_t --> unsigned long long
+	size_t clock = 0;
+	size_t landingCount = 0, takeoffCount = 0;
+	size_t landingRejected = 0, takeoffRejected = 0;
+	size_t landingWaitTime = 0, takeoffWaitTime = 0;
+	size_t idleTime = 0;
 
 	void generatePlane();
 
@@ -37,16 +39,26 @@ private:
 
 	void printLog(const Plane& plane, Result result) const;
 
+	void printLog(const Plane& plane, Status status) const;
+
+	void shutdown();
+
+	bool landPlane();
+
+	bool takeoffPlane();
+
 public:
 	Status getStatus() const;
 
 	void reset();
 
-	void runSimulation();
+	void runSimulation(int duration);
+
+	std::string getSummary() const;
 
 	Runway() = default;
 
-	Runway(int maxQueueSize, double departingRate, double landingRate, bool isVerbose);
+	Runway(int maxQueueSize, double departingRate, double landingRate, bool isVerbose = false);
 
 	int getMaxQueueSize() const;
 

@@ -6,12 +6,12 @@ namespace airport {
 class Plane {
 public:
 	enum Status {
-		NULL = 0, LANDING = 1, DEPARTING = 2
+		NEVER_USED = 0, LANDING = 1, DEPARTING = 2
 	};
 private:
 	inline static int planesCount = 0;
 	int id;
-	Status status = NULL;
+	Status status = NEVER_USED;
 public:
 	Plane() = delete;
 
