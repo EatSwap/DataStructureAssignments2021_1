@@ -31,7 +31,7 @@ int main() {
 			  << "Your favourite landing planes generating rate: ";
 	double landingRate;
 	std::cin >> landingRate;
-	while (std::cin.fail()) {
+	while (std::cin.fail() || landingRate <= 0.0) {
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cout << "Sorry, but your input is invalid. Try again: ";
@@ -41,7 +41,7 @@ int main() {
 			  << "Your favourite takeoff planes generating rate: ";
 	double takeoffRate;
 	std::cin >> takeoffRate;
-	while (std::cin.fail()) {
+	while (std::cin.fail() || takeoffRate <= 0.0) {
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cout << "Sorry, but your input is invalid. Try again: ";
